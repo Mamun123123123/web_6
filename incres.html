@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+</head>
+<style>
+    .red{
+        color: red;
+    }
+    .green {
+        color: green;
+    }
+</style>
+<body>
+    <h1 id="count" class="red">0</h1>
+    <button id="add">add</button>
+    <button id="remove">remove</button>
+    <script>
+        let count = 0;
+        const countdispl = document.getElementById("count");
+        const add = document.getElementById("add");
+        const remove = document.getElementById("remove");
+        function updateScreen() {
+            countdispl.textContent = count;
+            if (count > 0) {
+                countdispl.className = "green";
+            }
+            else {
+                countdispl.className = "red"
+            }
+        }
+        add.addEventListener("click", () => {
+            count++;
+            updateScreen();
+        });
+
+        remove.addEventListener("click", () => {
+            if (count > 0) {
+                count--;
+                updateScreen();
+            }
+        });
+
+        updateScreen();
+
+    </script>
+
+</body>
+
+</html>
