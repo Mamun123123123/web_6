@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        body {
+            text-align: center;
+            padding-top: 50px;
+            font-family: Arial;
+        }
+        div {
+            align-items: center;
+            margin-top:300px ;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+            
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <h1>background changer</h1>
+        <button onclick="change('red')">Red</button>
+        <button onclick="change('green')">Green</button>
+        <button onclick="change('blue')">Blue</button>
+        <button onclick="change('black')">Black</button>
+        <button onclick="change('yellow')">Yellow</button>
+    </div>
+
+
+    <script>
+        function change(color) {
+            document.body.style.background = color;
+        }
+    </script>
+
+</body>
+
+</html>
