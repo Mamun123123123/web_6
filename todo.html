@@ -3,20 +3,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Todo List</title>
-    <link rel="stylesheet" href="style.css">
+    <title>To-Do List</title>
+   
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        .completed {
+            text-decoration: line-through;
+            color: #9ca3af; 
+        }
+    </style>
 </head>
-<body>
-    <div class="container">
-        <h1>My Todo List</h1>
-        <form id="todo-form">
-            <input type="text" id="todo-input" placeholder="What needs to be done?" required>
-            <button type="submit">Add Todo</button>
-        </form>
-        <ul id="todo-list">
-            <!-- Todos will be added here dynamically -->
-        </ul>
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+
+    <div class="container mx-auto p-4 max-w-md">
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">My To-Do List</h1>
+
+    
+            <form id="todo-form" class="flex mb-4">
+                <input 
+                    type="text" 
+                    id="todo-input" 
+                    placeholder="Add a new task..." 
+                    class="shadow appearance-none border rounded-l-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    autocomplete="off"
+                >
+                <button 
+                    type="submit" 
+                    class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-r-lg focus:outline-none focus:shadow-outline transition-colors duration-200"
+                >
+                    Add
+                </button>
+            </form>
+
+           
+            <ul id="todo-list" class="space-y-2">
+                
+            </ul>
+        </div>
     </div>
-    <script src="script.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          
+            const todoForm = document.getElementById('todo-form');
+            const todoInput = document.getElementById('todo-input');
+            const todoList = document.getElementById('todo-list');
+
+         
+            let todos = JSON.parse(localStorage.getItem('todos')) || [];
+
+        
+            const renderTodos = () => {
+              
+                todoList.innerHTML = '';
+
+             
+                todos.forEach(todo => {
+                    
+                    const li = document.createElement('li');
+                    li.className = 'flex items-center justify-between bg-gray-50 p-3 rounded-md border border-gray-200';
+                    li.dataset.id = todo.id;
+
+                   
+                    const textContainer = document.createElement('div');
+                    textContainer.className = 'flex items-center flex-grow';
+
+     
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.checked = todo.completed;
+                    checkbox.className = 'mr-3 h-5 w-5 text-blue-600 focus:ring-blue-500 border-gray-300 rounded cursor-pointer';
+                    
+                
+                    const taskText = document.createElement('span');
+                    taskText.textContent = todo.text;
+                    taskText.className = todo.completed ? 'completed' : '';
+
+             
+                    const deleteButton = document.createElement('button');
+                    deleteButton.textContent = 'Delete';
+                    deleteButton.className = 'text-red-500 hover:text-red-700 font-bold ml-4 transition-colors duration-200';
+
+                    checkbox.addEventListener('change', () => toggleTodo(todo.id));
+                    deleteButton.addEventListener('click', () => deleteTodo(todo.id));
+
+                    textContainer.appendChild(checkbox);
+                    textContainer.appendChild(taskText);
+                    li.appendChild(textContainer);
+                    li.appendChild(deleteButton);
+                    todoList.appendChild(li);
+                });
+            };
+
+            const addTodo = (text) => {
+                const newTodo = {
+                    id: Date.now(), 
+                    text: text,
+                    completed: false
+                };
+                todos.push(newTodo);
+                saveTodos();
+                renderTodos();
+            };
+
+            
+            const toggleTodo = (id) => {
+                const todo = todos.find(t => t.id === id);
+                if (todo) {
+                    todo.completed = !todo.completed;
+                    saveTodos();
+                    renderTodos();
+                }
+            };
+
+            const deleteTodo = (id) => {
+                todos = todos.filter(t => t.id !== id);
+                saveTodos();
+                renderTodos();
+            };
+            
+            const saveTodos = () => {
+                localStorage.setItem('todos', JSON.stringify(todos));
+            };
+            todoForm.addEventListener('submit', (event) => {
+                event.preventDefault(); 
+                const text = todoInput.value.trim();
+                if (text) {
+                    addTodo(text);
+                    todoInput.value = ''; 
+                    todoInput.focus(); 
+                }
+            });
+
+            
+            renderTodos();
+        });
+    </script>
 </body>
 </html>
